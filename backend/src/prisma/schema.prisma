@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  password    String
+  name        String
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  submissions Submission[]
+
+  @@map("users")
+  @@index([email])
+}
+
+model Topic {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String
+  coverImage  String?   @map("cover_image")
+  difficulty  String
+  problems    Problem[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("topics")
+  @@index([name])
+}
+
+model Problem {
+  id             String       @id @default(uuid())
+  title          String      @db.VarChar(255)
+  description    String      @db.Text
+  boilerplateCode String     @map("boilerplate_code") @db.Text
+  starterCode    String      @map("starter_code") @db.Text
+  sampleInput    String      @map("sample_input") @db.Text
+  sampleOutput   String      @map("sample_output") @db.Text
+  youtubeUrl     String?     @map("youtube_url") @db.VarChar(255)
+  testCases      Json[]
+  topicId        String      @map("topic_id")
+  topic          Topic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  submissions    Submission[]
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  @@map("problems")
+  @@index([topicId])
+  @@index([topicId, id])
+}
+
+model Submission {
+  id        String   @id @default(uuid())
+  code      String   @db.Text
+  result    Json
+  userId    String   @map("user_id")
+  problemId String   @map("problem_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  problem   Problem  @relation(fields: [problemId], references: [id])
+
+  @@map("submissions")
+  @@index([userId])
+  @@index([problemId])
+  @@index([userId, problemId])
+} 
