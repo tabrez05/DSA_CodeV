@@ -1,69 +1,106 @@
-🔧 Tech Stack Overview
-Frontend (Port 5173)
-Built using React and Vite for a faster dev experience.
+# CodeWit
 
-I'm using TypeScript throughout for type safety.
+A modern coding platform for learning and practicing programming.
 
-Styling is handled using Tailwind CSS.
+## Features
 
-API calls are made with Axios.
+- Interactive coding environment
+- Real-time code execution using Judge0 API
+- Topic-based learning structure
+- User authentication and progress tracking
+- Modern UI with Tailwind CSS
 
-CSS compatibility is ensured using PostCSS and Autoprefixer.
+## Tech Stack
 
-Backend (Port 3001)
-Built with Node.js and Express, also in TypeScript.
+### Frontend
+- React + Vite
+- TypeScript
+- Tailwind CSS
+- Axios
 
-I’m using Prisma as the ORM to interact with a PostgreSQL database.
+### Backend
+- Node.js + Express
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- JWT Authentication
 
-JWT is used for authentication.
+## Prerequisites
 
-I’ve also added CORS to handle cross-origin issues and Axios here for calling external APIs.
+- Node.js (v14 or higher)
+- PostgreSQL
+- Judge0 API key (from RapidAPI)
 
-Database
-PostgreSQL with tables for:
+## Setup
 
-Users (auth and user management)
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd codewit
+```
 
-Topics (structured learning topics)
+2. Install dependencies:
+```bash
+# Install backend dependencies
+cd backend
+npm install
 
-Problems (coding challenges)
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-Submissions (user solutions)
+3. Environment Setup:
 
-Code Execution
-Code is compiled and executed using Judge0 API via RapidAPI.
+Backend (.env):
+```
+PORT=3001
+NODE_ENV=development
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/codedsa?schema=public"
+JUDGE0_API_KEY=your_judge0_api_key
+JUDGE0_API_URL="https://judge0-ce.p.rapidapi.com"
+JWT_SECRET=your_jwt_secret
+```
 
-💡 Use Case / Purpose
-The main goal is to give learners a centralized platform where they can:
+4. Database Setup:
+```bash
+cd backend
+npx prisma generate
+npx prisma db push
+```
 
-Learn coding topics step by step
+5. Start the application:
 
-Practice problems in real time
-
-Get immediate feedback from an online compiler
-
-Track their progress and submissions
-
-It's meant to be both educational and engaging, with potential for course integration or personal practice.
-
-⚠️ Current Issues I'm Dealing With
 Backend:
-I’m getting a port conflict on 3001 (EADDRINUSE), likely because a server isn’t closing properly.
-
-Prisma client isn’t generating correctly due to path configuration issues.
-
-The Judge0 API key isn’t set up properly, so code execution isn’t working yet.
+```bash
+cd backend
+npm run dev
+```
 
 Frontend:
-There’s a deprecated CommonJS warning with Vite.
+```bash
+cd frontend
+npm run dev
+```
 
-I have a couple of moderate vulnerabilities in the dependency tree.
+## API Documentation
 
-76 packages are showing as needing funding—not critical but worth noting.
+### Topics
+- GET /api/topics - Get all topics
+- GET /api/topics/:id - Get topic by ID
 
-Environment:
-Some values in my .env file are missing or placeholders like JUDGE0_API_KEY and JWT_SECRET.
+### Code Execution
+- POST /api/compile - Execute code
+  - Body: { language_id: number, source_code: string }
 
-Java Runtime is missing, which is needed for some tools I might integrate.
+## Contributing
 
-Also noticing multiple instances of servers running—need to clean that up with a process manager like PM2.
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
+
+## License
+
+MIT
